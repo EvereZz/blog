@@ -23,17 +23,27 @@
 
             <div class="flex items-center md:mt-0 mt-8">
                 @auth
-                    <span href="/register" class="text-sm font-bold uppercase">Welcome, {{ auth()->user()->name }}!</span>
-                
-                    <form method="POST" action="/logout" class="text-sm font-semibold text-blue-500 ml-6">
-                    @csrf
-
-                    <button type="submit">Log Out</button>
+                <x-dropdown>
+                    <x-slot name="trigger" >
+                        <button class="text-sm font-bold uppercase">Welcome, {{ auth()->user()->name }}!</button>
+                    </x-slot>
                     
+                    @admin
+                        <x-dropdown-item href="/admin/posts" :active="request()->is('admin/posts')">All Posts</x-dropdown-item>
+                        <x-dropdown-item href="/admin/posts/create" :active="request()->is('admin/posts/create')">New Post</x-dropdown-item>
+                    @endadmin
+                    
+                    <x-dropdown-item href="#" x-data="{}" @click.prevent="document.querySelector('#logout-form').submit()">Log Out</x-dropdown-item>
+
+                    <form id="logout-form" method="POST" action="/logout" class="hidden">
+                        @csrf
+
                     </form>
+                </x-dropdown>
+
                 @else
-                    <a href="/register" class="text-sm font-bold uppercase">Register</a>
-                    <a href="/login" class="ml-6 text-sm font-bold uppercase">Log In</a>
+                <a href="/register" class="text-sm font-bold uppercase">Register</a>
+                <a href="/login" class="ml-6 text-sm font-bold uppercase">Log In</a>
                 @endauth
 
                 <a href="#newsletter" class="bg-blue-500 ml-6 rounded-full text-xs font-semibold text-white uppercase py-3 px-5">
@@ -42,7 +52,7 @@
             </div>
         </nav>
 
-         {{ $slot }}
+        {{ $slot }}
 
         <footer id="newsletter" class="bg-gray-100 border border-black border-opacity-5 rounded-xl text-center py-16 px-10 mt-16">
             <img src="/images/lary-newsletter-icon.svg" alt="" class="mx-auto -mb-6" style="width: 145px;">
@@ -64,7 +74,7 @@
 
                         <button type="submit"
                                 class="transition-colors duration-300 bg-blue-500 hover:bg-blue-600 mt-4 lg:mt-0 lg:ml-3 rounded-full text-xs font-semibold text-white uppercase py-3 px-8"
-                        >
+                                >
                             Subscribe
                         </button>
                     </form>
@@ -73,5 +83,5 @@
         </footer>
     </section>
 
-    <x-flash />
+<x-flash />
 </body>

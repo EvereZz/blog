@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Blade;
+use App\Models\User;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -25,5 +28,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Model::unguard();
+        
+        Gate::define('admin', function (User $user){
+           return $user->username === 'admin'; 
+        });
+        
+        // just for example
+        Blade::if('admin', function(){
+            return request()->user()?->can('admin');
+        });
     }
 }
