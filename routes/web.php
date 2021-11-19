@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\PostCommentsController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\BookmarksController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,10 +34,18 @@ Route::post('logout', [SessionsController::class, 'destroy'])->middleware('auth'
 
 Route::middleware('can:admin')->group(function () {
     Route::resource('admin/posts', AdminController::class)->except('show');
+});
 //    Route::get('admin/posts', [AdminController::class, 'index']);
 //    Route::get('admin/posts/create', [AdminController::class, 'create']);
 //    Route::post('admin/posts', [AdminController::class, 'store']);
 //    Route::get('admin/posts/{post}/edit', [AdminController::class, 'edit']);
 //    Route::patch('admin/posts/{post}', [AdminController::class, 'update']);
 //    Route::delete('admin/posts/{post}', [AdminController::class, 'destroy']);
-});
+
+Route::get('account/{user:username}', [AccountController::class, 'show'])->middleware('auth');
+Route::get('account/{user:username}/edit', [AccountController::class, 'edit'])->middleware('auth');
+Route::patch('account/{user}', [AccountController::class, 'update'])->middleware('auth');
+
+Route::get('account/{user:username}/bookmarks', [BookmarksController::class, 'show'])->middleware('auth');
+Route::post('account/{post:slug}/bookmarks', [BookmarksController::class, 'store'])->middleware('auth');
+Route::delete('account/bookmarks/{post:slug}', [BookmarksController::class, 'destroy'])->middleware('auth');

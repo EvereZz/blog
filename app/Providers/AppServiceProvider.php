@@ -33,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
            return $user->username === 'admin'; 
         });
         
-        // just for example
         Blade::if('admin', function(){
             return request()->user()?->can('admin');
         });

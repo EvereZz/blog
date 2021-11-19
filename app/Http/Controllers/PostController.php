@@ -14,6 +14,7 @@ class PostController extends Controller
                 )->paginate(6)->withQueryString()
         ]);
     }
+    
     public function show(Post $post) 
     {
         return view("posts.show", [

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\User;
 use App\Models\Post;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
@@ -17,7 +19,9 @@ class AdminController extends Controller {
     
     public function create() 
     {
-        return view("admin.posts.create");
+        return view("admin.posts.create", [
+            'categories' => Category::All()
+        ]);
     }
 
     public function store()
@@ -26,6 +30,8 @@ class AdminController extends Controller {
             'user_id' => auth()->id(),
             'thumbnail' => request()->file('thumbnail')->store('thumbnails')
         ]);
+        
+        $attributes['published'] == 'Yes' ? $attributes['published'] = 1 : $attributes['published'] = 0;
 
         Post::create($attributes);
 
@@ -34,16 +40,22 @@ class AdminController extends Controller {
     
     public function edit(Post $post) 
     {
-        return view('admin.posts.edit', ['post' => $post]);    
+        return view('admin.posts.edit', [
+            'post' => $post,
+            'categories' => Category::All(),
+            'authors' => User::All()
+        ]);    
     }
     
     public function update(Post $post)
     {
-        $attributes = $this()->validatePost($post);
+        $attributes = $this->validatePost($post);
         
         if ($attributes['thumbnail'] ?? false) {
             $attributes['thumbnail'] = request()->file('thumbnail')->store('thumbnails');
         }
+        
+        $attributes['published'] == 'Yes' ? $attributes['published'] = 1 : $attributes['published'] = 0;
         
         $post->update($attributes);
         
@@ -63,11 +75,13 @@ class AdminController extends Controller {
                 
         return request()->validate([
             'title' => 'required',
-            'thumbnail' => $post->exist ? ['image'] : ['required', 'image'],
+            'thumbnail' => $post->exists ? ['image'] : ['required', 'image'],
             'slug' => ['required', Rule::unique('posts', 'slug')->ignore($post)],
             'excerpt' => 'required',
             'body' => 'required',
-            'category_id' => ['required', Rule::exists('categories', 'id')]
+            'category_id' => ['required', Rule::exists('categories', 'id')],
+            'user_id' => $post->exists ? ['required', Rule::exists('users', 'id')] : '',
+            'published' => 'required'
         ]);
     }
 }

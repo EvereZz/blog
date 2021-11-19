@@ -11,14 +11,7 @@ class SessionsController extends Controller
     {
         return view('sessions.login');
     }
-
-    public function destroy()
-    {
-        Auth::logout();
-
-        return redirect('/')->with('success', "Goodbye!");
-    }
-
+    
     public function store()
     {
         $attribytes = request()->validate([
@@ -36,5 +29,12 @@ class SessionsController extends Controller
 
         return redirect('/')->with('success', "Welcome Back!");
 
+    }
+    
+     public function destroy()
+    {
+        Auth::logout();
+
+        return redirect('/')->with('success', "Goodbye!");
     }
 }

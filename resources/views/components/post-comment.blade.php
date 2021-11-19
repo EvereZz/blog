@@ -4,7 +4,7 @@
 
 <article class="flex space-x-4">
     <div style="flex-shrink: 0;">
-        <img src="https://i.pravatar.cc/60?u={{ $comment->author->id }}" alt="" width="60" height="60" class="rounded-xl">
+        <x-avatar source='{{ $comment->author->avatar }}' id='{{ $comment->user_id }}' class="rounded-xl" width="60" height="60" />
     </div>
 
     <div>

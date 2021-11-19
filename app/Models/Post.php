@@ -13,6 +13,8 @@ class Post extends Model
 
     public function scopeFilter($query, array $filters)
     {
+        $query->where('published', 'like', 1);
+        
         $query->when($filters['search'] ?? false, fn($query, $search) =>
             $query->where(fn($query) =>
                 $query->where('title', 'like', '%' . $search . '%')
@@ -46,5 +48,10 @@ class Post extends Model
     public function author() 
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    
+    public function bookmarks() 
+    {
+        return $this->hasMany(Bookmark::class);
     }
 }

@@ -10,12 +10,31 @@
                     </p>
 
                     <div class="flex items-center lg:justify-center text-sm mt-4">
-                        <img src="https://i.pravatar.cc/60?u={{ $post->user_id }}" alt="avatar">
+
+                        <x-avatar source='{{ $post->author->avatar }}' id='{{ $post->user_id }}' class="rounded-xl ml-6 mt-6" width="80"/>
+
                         <div class="ml-3 text-left">
                             <h5 class="font-bold">
                                 <a href="/?author={{ $post->author->username }}">{{ $post->author->name }}</a>
                             </h5>
                         </div>
+                    </div>
+
+                    <div class="py-2">
+                        @if ( auth()->user()->bookmarks->where('post_id', $post->id)->first() == null )
+                            <form method="POST" action='/account/{{ $post->slug }}/bookmarks'>
+                                @csrf
+    
+                                <button type="submit" class="hover:underline">Add to bookmarks</button>
+                            </form>
+                        @else
+                            <form method="POST" action="/account/bookmarks/{{ $post->slug }}">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="hover:underline">Remove from bookmarks</button>
+                            </form>
+                        @endif
                     </div>
                 </div>
 
@@ -23,12 +42,12 @@
                     <div class="hidden lg:flex justify-between mb-6">
                         <a href="\" class="transition-colors duration-300 relative inline-flex items-center text-lg hover:text-blue-500">
                             <svg width="22" height="22" viewBox="0 0 22 22" class="mr-2">
-                                <g fill="none" fill-rule="evenodd">
-                                    <path stroke="#000" stroke-opacity=".012" stroke-width=".5" d="M21 1v20.16H.84V1z">
-                                    </path>
-                                    <path class="fill-current" d="M13.854 7.224l-3.847 3.856 3.847 3.856-1.184 1.184-5.04-5.04 5.04-5.04z">
-                                    </path>
-                                </g>
+                            <g fill="none" fill-rule="evenodd">
+                            <path stroke="#000" stroke-opacity=".012" stroke-width=".5" d="M21 1v20.16H.84V1z">
+                            </path>
+                            <path class="fill-current" d="M13.854 7.224l-3.847 3.856 3.847 3.856-1.184 1.184-5.04-5.04 5.04-5.04z">
+                            </path>
+                            </g>
                             </svg>
 
                             Back to Posts

@@ -9,15 +9,15 @@
 
             <x-form.input name="thumbnail" type='file' />
 
-            <x-form.textarea name="excerpt" />
+            <x-form.textarea name="excerpt"> {{ old('excerpt') }}</x-form.textarea>
 
-            <x-form.textarea name="body" />
+            <x-form.textarea name="body">{{ old('body') }}</x-form.textarea>
 
             <x-form.field>
                 <x-form.label name="category" />
 
                 <select class="bg-gray-200" name="category_id" id="category_id">
-                    @foreach (\App\Models\Category::All() as $category)
+                    @foreach ($categories as $category)
                     <option 
                         value="{{ $category->id }}" 
                         {{ old('category_id') == $category->id ? 'selected' : '' }}
@@ -27,8 +27,19 @@
 
                 <x-form.error name="category" />
             </x-form.field>
+            
+            <x-form.field>
+                <x-form.label name="publish?" />
+                
+                <select class="bg-gray-200" name="published" id="published">
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+                
+                <x-form.error name="publish?" />
+            </x-form.field>
 
-            <x-form.button>Publish</x-form.button>
+            <x-form.button>Submit</x-form.button>
         </form>
     </x-setting>
 </x-layout>
