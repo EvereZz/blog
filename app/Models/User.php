@@ -6,10 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Auth\Passwords\CanResetPassword;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail 
 {
-    use HasFactory, Notifiable;
+
+    use HasFactory,
+        Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -36,23 +39,27 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($password)
-    {
+    public function setPasswordAttribute($password) {
         $this->attributes['password'] = bcrypt($password);
     }
-    
-    public function posts() 
-    {
+
+    public function posts() {
         return $this->hasMany(Post::class);
     }
 
-    public function comments() 
-    {
+    public function comments() {
         return $this->hasMany(Comment::class);
     }
-    
-    public function bookmarks() 
-    {
+
+    public function bookmarks() {
         return $this->hasMany(Bookmark::class);
+    }
+    
+    public function followers() {
+        return $this->hasMany(Follower::class, 'following_id', 'id');
+    }
+    
+    public function followings() {
+        return $this->hasMany(Follower::class, 'follower_id', 'id');
     }
 }

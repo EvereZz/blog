@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             'thumbnail' => 'thumbnails/illustration-2.png',
         ]);
         
-        Post::factory(10)->create([
+        Post::factory(20)->create([
             'thumbnail' => 'thumbnails/illustration-1.png',
         ]);
     }

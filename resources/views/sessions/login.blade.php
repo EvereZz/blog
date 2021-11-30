@@ -13,6 +13,8 @@
 
                     <x-form.button>Log In</x-form.button>
                 </form>
+                
+                <a href="/forgot-password" class="text-xs hover:underline">forgot your password?</a>
             </x-panel>
         </main>
     </section>

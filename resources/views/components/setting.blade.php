@@ -23,6 +23,8 @@
                     </li>
                     <li>
                         <a href="/account/{{ auth()->user()->username }}/bookmarks" class="{{ request()->is('account/' . auth()->user()->username . '/bookmarks') ? 'text-blue-500' : ''}}">Bookmarks</a>
+                    </li><li>
+                        <a href="/account/{{ auth()->user()->username }}/followings" class="{{ request()->is('account/' . auth()->user()->username . '/followings') ? 'text-blue-500' : ''}}">Followings</a>
                     </li>
             </ul>
 

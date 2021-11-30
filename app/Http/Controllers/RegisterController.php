@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -24,9 +24,11 @@ class RegisterController extends Controller
         ]);
 
         $user = User::create($attribytes);
+        
+        event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect('/')->with('success', 'Your account has been created.');
+        return redirect('email/verify')->with('success', 'Your account has been created.');
     }
 }

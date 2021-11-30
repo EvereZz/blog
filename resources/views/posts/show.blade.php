@@ -20,6 +20,7 @@
                         </div>
                     </div>
 
+                    @auth
                     <div class="py-2">
                         @if ( auth()->user()->bookmarks->where('post_id', $post->id)->first() == null )
                             <form method="POST" action='/account/{{ $post->slug }}/bookmarks'>
@@ -36,6 +37,24 @@
                             </form>
                         @endif
                     </div>
+                    
+                    <div class="py-2">
+                        @if ( auth()->user()->followings->where('following_id', $post->author->id)->first() == null )
+                            <form method="POST" action='/account/{{ $post->author->username }}/followings'>
+                                @csrf
+    
+                                <button type="submit" class="hover:underline">Follow</button>
+                            </form>
+                        @else
+                            <form method="POST" action="/account/followings/{{ $post->author->username }}">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit" class="hover:underline">Unfollow</button>
+                            </form>
+                        @endif
+                    </div>
+                    @endauth
                 </div>
 
                 <div class="col-span-8">
@@ -71,7 +90,7 @@
                     @include ('posts._add-comment-form')
 
                     @foreach ($post->comments as $comment)
-                    <x-post-comment :comment="$comment" />
+                        <x-post-comment :comment="$comment" />
                     @endforeach
                 </section>
             </article>

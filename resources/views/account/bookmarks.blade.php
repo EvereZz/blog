@@ -34,7 +34,7 @@
             @endforeach
             
             @else
-                <p class="text-center">No Bookmarks Yet. You can add some if you like it.</p>
+                <p class="text-center">No Bookmarks Yet. You can add some if you like.</p>
             @endif
           </tbody>
         </table>

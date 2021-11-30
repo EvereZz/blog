@@ -34,6 +34,22 @@ class Post extends Model
             )
         );
     }
+    
+    public function checkViews() 
+    {
+        if(auth()->id() == null) {
+            return $this->postViews()
+            ->where('ip', '=',  request()->ip())->exists();
+        }
+
+        return $this->postViews()
+        ->where(function($postViewsQuery) { $postViewsQuery
+            ->where('ip', '=',  request()->ip())
+            ->orWhere('user_id', '=', (auth()->check()));
+        
+        })->exists();
+        
+    }
 
     public function comments() 
     {
@@ -53,5 +69,10 @@ class Post extends Model
     public function bookmarks() 
     {
         return $this->hasMany(Bookmark::class);
+    }
+    
+    public function postViews()
+    {
+        return $this->hasMany(PostView::class);
     }
 }
