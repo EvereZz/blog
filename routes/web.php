@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SubscribersController;
 use App\Http\Controllers\FollowersController;
 use App\Http\Controllers\VerifyEmailController;
 use App\Http\Controllers\PasswordResetController;
@@ -62,3 +63,7 @@ Route::post('email/verification-notification', [VerifyEmailController::class, 'u
 Route::get('account/{user:username}/followings', [FollowersController::class, 'show'])->middleware('auth');
 Route::post('account/{user:username}/followings', [FollowersController::class, 'store'])->middleware('auth');
 Route::delete('account/followings/{user:username}', [FollowersController::class, 'destroy'])->middleware('auth');
+
+Route::post('subscribe', [SubscribersController::class, 'store']);
+Route::get('unsubscribe-form', [SubscribersController::class, 'edit']);
+Route::delete('unsubscribe', [SubscribersController::class, 'destroy']);

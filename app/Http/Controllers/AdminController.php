@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subscriber;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use App\Mail\PostPublished;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller {
 
@@ -33,7 +36,41 @@ class AdminController extends Controller {
         
         $attributes['published'] == 'Yes' ? $attributes['published'] = 1 : $attributes['published'] = 0;
 
-        Post::create($attributes);
+        $post = Post::create($attributes);
+        
+        $followers = auth()->user()->followers;
+        
+        if (! $followers->count() == 0) {
+            foreach ($followers->all() as $recipient) {
+                Mail::to($recipient->user->email)->send(new PostPublished($post, $recipient->user->name));
+            }
+        }
+
+        $subscribers = Subscriber::all()->all();
+
+        $arrSubs = array();
+
+        $arrFoll = array();
+
+        if ($subscribers) {
+            foreach ($subscribers as $subs) {
+                array_push($arrSubs, $subs->email);
+            }
+        }
+
+        if (!$followers->count() == 0) {
+            foreach ($followers->all() as $subs) {
+                array_push($arrFoll, $subs->user->email);
+            }
+        }
+
+        $result = array_diff($arrSubs, $arrFoll);
+
+        if ($result) {
+            foreach ($result as $recipient) {
+                Mail::to($recipient)->send(new PostPublished($post, 'Subscriber!'));
+            }
+        }
 
         return redirect('/')->with('success', 'New post created.');
     }

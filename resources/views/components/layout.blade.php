@@ -35,6 +35,7 @@
 
                     <x-dropdown-item href="/account/{{ auth()->user()->username }}" :active="request()->is('account/' . auth()->user()->username )">Account</x-dropdown-item>
                     <x-dropdown-item href="/account/{{ auth()->user()->username }}/bookmarks" :active="request()->is('account/'. auth()->user()->username . '/bookmarks')">Bookmarks</x-dropdown-item>
+                    <x-dropdown-item href="/account/{{ auth()->user()->username }}/followings" :active="request()->is('account/'. auth()->user()->username . '/followings')">Followings</x-dropdown-item>
                     
                     <x-dropdown-item href="#" x-data="{}" @click.prevent="document.querySelector('#logout-form').submit()">Log Out</x-dropdown-item>
 
@@ -57,21 +58,27 @@
 
         {{ $slot }}
 
-        <footer id="newsletter" class="bg-gray-100 border border-black border-opacity-5 rounded-xl text-center py-16 px-10 mt-16">
+        <footer id="newsletter" class="bg-gray-200 border border-black border-opacity-5 rounded-xl text-center py-16 px-10 mt-16">
             <h5 class="text-3xl">Stay in touch with the latest posts</h5>
-            <p class="text-sm mt-3">Promise to keep the inbox clean. No bugs.</p>
+            <a href="/unsubscribe-form" class="text-sm mt-3 hover:underline">You can Unsubscribe through this link.</a>
 
             <div class="mt-10">
-                <div class="relative inline-block mx-auto lg:bg-gray-200 rounded-full">
+                <div class="relative inline-block mx-auto lg:bg-gray-300 rounded-full">
 
-                    <form method="POST" action="#" class="lg:flex text-sm">
+                    <form method="POST" action="/subscribe" class="lg:flex text-sm">
+                        @csrf
+                        
                         <div class="lg:py-3 lg:px-5 flex items-center">
                             <label for="email" class="hidden lg:inline-block">
                                 <img src="/images/mailbox-icon.svg" alt="mailbox letter">
                             </label>
 
-                            <input id="email" type="text" placeholder="Your email address"
+                            <input id="subscribe" name="email" type="email" placeholder="Your email address"
                                    class="lg:bg-transparent py-2 lg:py-0 pl-4 focus-within:outline-none">
+                            
+                            @error('email')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
                         
                         <button type="submit"
